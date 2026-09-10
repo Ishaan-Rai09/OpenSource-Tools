@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { SearchRequest } from "@/lib/validators";
 import { dedupeRepos, searchGithub } from "@/lib/github";
-import { expandQueries, stubComparison } from "@/lib/llm";
+import { expandQueries, buildComparison, stubComparison } from "@/lib/llm";
 import { queryHash, getCached, setCached } from "@/lib/cache";
 import { MOCK_REPOS } from "@/lib/mock-data";
 export async function POST(req: Request) {
@@ -14,7 +14,8 @@ export async function POST(req: Request) {
     const queries = await expandQueries(parsed.data.query);
     const batches = await Promise.allSettled(queries.slice(0, 3).map(searchGithub));
     const merged = dedupeRepos(batches.flatMap(b => (b.status === "fulfilled" ? b.value : []))).slice(0, 10);
-    const repos = (merged.length ? merged : MOCK_REPOS).map(r => ({ ...r, comparison: stubComparison(r.full_name) }));
+    const base = merged.length ? merged : MOCK_REPOS;
+    const repos = await Promise.all(base.map(async (r) => ({ ...r, comparison: await buildComparison(r.full_name, r.description) })));
     const payload = { query: parsed.data.query, expanded: queries, repos };
     await setCached(key, payload); return NextResponse.json(payload);
   } catch { return NextResponse.json({ query: parsed.data.query, repos: MOCK_REPOS.map(r => ({ ...r, comparison: stubComparison(r.full_name) })), degraded: true }); }
