@@ -1,0 +1,2 @@
+const items = ["Notion → AppFlowy", "Twilio → Evolution API", "Slack → Mattermost", "Airtable → NocoDB", "Auth0 → Supertokens"];
+export function Ticker() { return <div className="mt-6 overflow-hidden border-[1.5px] border-[#111111] bg-white"><div className="animate-ticker flex w-max gap-6 px-4 py-2 font-mono text-xs uppercase">{[...items, ...items].map((t, i) => <span key={i} className="border border-[#111111] px-2 py-1">{t}</span>)}</div></div>; }

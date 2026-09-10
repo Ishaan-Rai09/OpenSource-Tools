@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@theme { --color-paper: #FAF6EF; --color-ink: #111111; --color-acid: #D9FF3D; --color-ember: #FF4D00; --font-display: "Space Grotesk", sans-serif; }
+body { background: #FAF6EF; color: #111111; }
+.hard { box-shadow: 4px 4px 0 #111111; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.animate-ticker { animation: ticker 22s linear infinite; }
