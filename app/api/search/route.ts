@@ -4,10 +4,16 @@ import { dedupeRepos, searchGithub } from "@/lib/github";
 import { expandQueries, buildComparison, stubComparison } from "@/lib/llm";
 import { queryHash, getCached, setCached } from "@/lib/cache";
 import { MOCK_REPOS } from "@/lib/mock-data";
+import { dbConnect } from "@/lib/db";
+import { SearchHistory } from "@/models/SearchHistory";
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const parsed = SearchRequest.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "query min 2 chars" }, { status: 400 });
+  // Fire-and-forget search history (never block response, never log identity)
+  dbConnect()
+    .then((ok) => { if (ok) SearchHistory.create({ query: parsed.data.query }).catch(() => {}); })
+    .catch(() => {});
   const key = `search:${queryHash(parsed.data.query)}`;
   const hit = await getCached(key); if (hit) return NextResponse.json(hit);
   try {
