@@ -11,7 +11,7 @@ export default function SavedPage() {
     }
   }, []);
   return (
-    <main className="min-h-screen bg-[#f5f1e8] p-6 text-[#111111]">
+    <main className="min-h-screen bg-[#FAF6EF] p-6 text-[#111111]">
       <h1 className="border border-[#111111] bg-white px-4 py-3 text-2xl font-black">
         SAVED TOOLS
       </h1>
