@@ -1,6 +1,6 @@
 // components/ResultsGrid.tsx
-import type { Repo } from "@/lib/mock-data";
-export function ResultsGrid({ repos }: { repos: (Repo & { comparison?: { replaces: string } })[] }) {
+export type CardRepo = { id: number; full_name: string; description: string | null; stargazers_count: number; language: string | null; license: string; html_url: string; comparison?: { replaces: string } };
+export function ResultsGrid({ repos }: { repos: CardRepo[] }) {
   return <div className="mt-6 grid gap-4 md:grid-cols-3">{repos.map((r, i) => (
     <article key={r.id} className={`hard border-[1.5px] border-[#111111] bg-white p-4 ${i === 0 ? "md:col-span-2 bg-[#D9FF3D]" : ""}`}>
       <div className="font-mono text-[11px] uppercase tracking-widest">★ {r.stargazers_count.toLocaleString()} · {r.language} · {r.license}</div>
