@@ -84,3 +84,13 @@ Payments/Pro tier, one-click deploy, API access, alerts, browser extension, cura
 
 ---
 Self-review: No TBDs. Architecture matches flow. Single-plan scope. No ambiguous requirements. Verified IDs prevent hallucination.
+
+---
+## Phase 2 Amendment (2026-09-10, user-approved)
+- **LLM:** NVIDIA API (`https://integrate.api.nvidia.com/v1`, OpenAI-compatible), primary `meta/llama-3.1-70b-instruct`, env `NVIDIA_API_KEY` + `NVIDIA_MODEL`. Deterministic fallback kept when key absent.
+- **Hosting:** Vercel. OAuth callback `https://<project>.vercel.app/api/auth/callback/github`.
+- **Auth:** GitHub-only (Auth.js v5, JWT sessions — no session tokens stored).
+- **DB:** MongoDB Atlas M0 (Mongoose). TLS in transit, Atlas encryption at rest, least-privilege DB user, 90-day TTL on SearchHistory, minimal PII (github id + username only), no query content in logs + `/privacy` page.
+- **Redis:** Upstash cloud REST (nothing to install; local dev gracefully no-ops).
+- **Telegram:** grammY webhook `POST /api/telegram`; text → search pipeline; voice (<1min) → NVIDIA ASR → pipeline; reply top-3 repo cards with links. Needs `TELEGRAM_BOT_TOKEN` + webhook set to prod URL.
+- **PWA:** `manifest.webmanifest` + SVG icons + minimal service worker (offline shell), installable, themeColor ink on paper.
