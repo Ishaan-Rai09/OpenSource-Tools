@@ -12,7 +12,6 @@
     "@prisma/client": "^7.10.0",
     "@upstash/redis": "^1.38.4",
     "framer-motion": "^13.2.0",
-    "grammy": "^1.46.0",
     "lucide-react": "^1.44.0",
     "mongoose": "^9.9.5",
     "next": "15.5.25",
