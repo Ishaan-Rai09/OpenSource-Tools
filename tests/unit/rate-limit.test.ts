@@ -13,9 +13,10 @@ afterEach(() => {
 });
 
 function stubUpstash(count: number) {
+  // One POST to /pipeline returning per-command results.
   vi.stubGlobal(
     "fetch",
-    vi.fn(async () => new Response(JSON.stringify([{ result: count }]), { status: 200 }))
+    vi.fn(async () => new Response(JSON.stringify([{ result: count }, { result: 1 }]), { status: 200 }))
   );
 }
 

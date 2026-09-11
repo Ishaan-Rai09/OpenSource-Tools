@@ -12,7 +12,7 @@ Copy `.env.example` to `.env.local` and fill only what you have. Every backend d
 | `NVIDIA_API_KEY` | build.nvidia.com → API keys (free tier) | LLM compare/expand via `meta/llama-3.1-70b-instruct` (override with `NVIDIA_MODEL`) |
 | `GITHUB_TOKEN` | GitHub → Settings → Developer settings → **Fine-grained PAT, public read-only** | Higher rate limits; never needs write scopes |
 | `MONGODB_URI` | MongoDB Atlas → free M0 cluster → Database Access user (least privilege) + Network Access allow `0.0.0.0/0` (needed for Vercel) → Connect → connection string | History auto-deletes after 90 days (TTL) |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Upstash → free Redis → REST tab | **Cloud over HTTPS — nothing to install on your PC**; local dev simply skips cache |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Upstash → free Redis → REST tab | **Cloud over HTTPS — nothing to install on your PC**; local dev simply skips cache. Rate limits (20 search / 30 bot per min) enforce only when these are set — without them the app fails open |
 | `TELEGRAM_BOT_TOKEN` | Telegram → chat with `@BotFather` → `/newbot` → paste token | Then point Telegram at prod: `TELEGRAM_BOT_TOKEN=test PUBLIC_URL=https://example.com node scripts/set-telegram-webhook.mjs` |
 | `TELEGRAM_WEBHOOK_SECRET` | Run `openssl rand -hex 32` (any random string) | Sent as `secret_token` when registering the webhook; the `/api/telegram` route rejects requests whose `x-telegram-bot-api-secret-token` header does not match (checked only when the env var is set, so local dev without it still works) |
 
