@@ -22,11 +22,25 @@ export async function expandQueries(q: string): Promise<string[]> {
 export async function buildComparison(fullName: string, description: string | null) {
   try {
     const raw = await chat("Return ONLY valid JSON.", `repo ${fullName}: ${description ?? ""}. JSON: {"features":[5 strings],"selfHost":"Easy|Medium|Hard","docker":bool,"replaces":string,"pros":string,"cons":string}`);
-    const parsed = ComparisonSchema.safeParse(JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? "{}"));
-    if (parsed.success) return parsed.data;
+    const parsed = ComparisonSchema.omit({ ai: true }).safeParse(JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? "{}"));
+    if (parsed.success) return { ...parsed.data, ai: true as const };
   } catch { /* fall through */ }
   return stubComparison(fullName);
 }
 export function stubComparison(fullName: string) {
-  return { features: ["Self-hostable", "REST/webhooks", "Docker support", "MIT/Apache license", "Active commits"], selfHost: "Medium" as const, docker: true, replaces: "Twilio / paid WhatsApp API", pros: `${fullName} is free and hackable`, cons: "You operate it yourself" };
+  return {
+    features: [
+      "Live details unavailable (AI offline)",
+      "Check the repo README for the feature list",
+      "Verify the license on GitHub",
+      "Check recent commits for activity",
+      "Confirm Docker support in the repo",
+    ],
+    selfHost: "Unknown" as const,
+    docker: false as const,
+    replaces: "Unspecified (AI unavailable)",
+    pros: `${fullName} is open source — check its README for strengths`,
+    cons: "AI comparison unavailable — review the repo manually",
+    ai: false as const,
+  };
 }
